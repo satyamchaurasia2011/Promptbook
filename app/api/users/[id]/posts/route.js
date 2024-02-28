@@ -7,7 +7,7 @@ export const GET = async (request, { params }) => {
 
     const prompts = await Prompt.find({
       creator: params.id,
-    }).populate("creator");
+    }).populate("creator").sort('-createdAt');
     return new Response(JSON.stringify(prompts), { status: 200 });
   } catch (error) {
     return new Response("Failed to get all prompts", { status: 500 });

@@ -5,7 +5,7 @@ import { connectToDB } from "@utils/database";
 export const GET = async (request, { params }) => {
   try {
     await connectToDB();
-    const prompt = await Prompt.findById(params.id).populate("creator");
+    const prompt = await Prompt.findById(params.id).populate("creator").sort('-createdAt');
     // console.log(prompt)
     if (!prompt) return new Response("Prompt not found", { status: 404 });
     return new Response(JSON.stringify(prompt), { status: 200 });

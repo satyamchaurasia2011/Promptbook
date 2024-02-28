@@ -1,10 +1,10 @@
 "use client";
 
+import { getTimeAgo } from "@utils/time";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
-
 const PromptCard = ({ post, handleTagClick, handleEdit, handleDelete }) => {
   const [copied, setCopied] = useState("");
   const { data: session } = useSession();
@@ -15,11 +15,13 @@ const PromptCard = ({ post, handleTagClick, handleEdit, handleDelete }) => {
     navigator.clipboard.writeText(post.prompt);
     setTimeout(() => setCopied(""), 3000);
   };
-
+// console.log(post)
+ 
   return (
     <div className="prompt_card">
       <div className="flex justify-between items-start gap-5">
-        <div className="flex-1 flex justify-start items-center gap-3 cursor-pointer" onClick={() => router.push(`/profile/${post.creator._id}`)}>
+        <div className="flex-1 flex justify-start items-center gap-3 cursor-pointer" 
+        onClick={() => session?.user.id === post.creator._id ? router.push('/profile') :  router.push(`/profile/${post.creator._id}`)}>
           <Image
             src={post.creator.image}
             alt="user_image"
@@ -60,7 +62,7 @@ const PromptCard = ({ post, handleTagClick, handleEdit, handleDelete }) => {
       </p>
 
       {session?.user.id === post.creator._id && pathName === "/profile" && (
-        <div className="mt-5 flex-end gap-4 border-t border-gray-100 pt-3">
+        <div className="mt-2 flex gap-4 border-t border-gray-100 pt-3">
           <p
             className="font-inter text-sm green_gradient cursor-pointer"
             onClick={handleEdit}
@@ -73,6 +75,7 @@ const PromptCard = ({ post, handleTagClick, handleEdit, handleDelete }) => {
           >Delete</p>
         </div>
       )}
+       <p className="font-inter mt-1 -mb-1 text-xs flex-end"> {getTimeAgo(post.updatedAt)}</p>
     </div>
   );
 };
